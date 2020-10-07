@@ -78,7 +78,7 @@ def visualize(img, proc_param, joints, verts, cam, img_path):
     plt.axis('off')
     plt.draw()
     plt.show()
-    plt.savefig(img_path[:-4]+'_preds'+'.png')
+    plt.savefig(img_path[:-4]+'_HMRpreds'+'.png', dpi=400)
     # import ipdb
     # ipdb.set_trace()
 

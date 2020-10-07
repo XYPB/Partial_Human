@@ -74,7 +74,7 @@ def disp_imgs(pred_vertices_smpl, mesh, camera_translation, img):
     plt.axis('off')
     plt.draw()
     plt.show()
-    plt.savefig(args.img[:-4]+'_preds'+'.png')
+    plt.savefig(args.img[:-4]+'_CMRpreds'+'.png', dpi=400)
 
 if __name__ == '__main__':
     args = parser.parse_args()
