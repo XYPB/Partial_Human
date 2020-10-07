@@ -5,10 +5,10 @@ LP=models/ours/model.ckpt-694216
 GPU=0
 
 # Directory in which data is located
-CUSTOM_DIR=
+CUSTOM_DIR=~/umcs/partial_humans/mypic
 
 # Number of images to evaluate on
-NUM_IMGS=
+NUM_IMGS=16
 
 # If true, saves predicted images
 SAVE_IMGS=True

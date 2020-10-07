@@ -1,5 +1,5 @@
 # Input Image Directory
-CUSTOM_DIR=
+CUSTOM_DIR=~/umcs/partial_humans/mypic
 
 # If on a multi-GPU machine, can set os.env['']
 GPU=0
