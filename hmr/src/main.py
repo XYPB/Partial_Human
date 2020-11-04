@@ -18,6 +18,7 @@ def main(config):
     with tf.device("/cpu:0"):
         data_loader = DataLoader(config)
         image_loader = data_loader.load() 
+    # kan dao zhe li 
 
     runner = HMRInference(config, image_loader)
     
