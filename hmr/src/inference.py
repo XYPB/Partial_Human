@@ -257,7 +257,7 @@ class HMRInference(object):
         step = 0
         
         all_kps = {}
-               
+        
         with tqdm(total=self.num_imgs, desc='Making Predictions') as pbar:
             with self.sv.managed_session(config=self.sess_config) as sess:
                 while not self.sv.should_stop():                

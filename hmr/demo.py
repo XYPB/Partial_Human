@@ -13,6 +13,7 @@ from __future__ import print_function
 import sys
 from absl import flags
 import numpy as np
+import json
 
 import skimage.io as io
 import tensorflow as tf
@@ -27,7 +28,7 @@ import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = '4'
 
-def visualize(img, proc_param, joints, verts, cam, img_path):
+def visualize(img, proc_param, joints, verts, cam, img_name):
     """
     Renders the result in original image coordinate frame.
     """
@@ -78,7 +79,7 @@ def visualize(img, proc_param, joints, verts, cam, img_path):
     plt.axis('off')
     plt.draw()
     plt.show()
-    plt.savefig(img_path[:-4]+'_HMRpreds'+'.png', dpi=400)
+    plt.savefig('../hmr_viz/' + img_name[:-4]+'_HMRpreds'+'.png', dpi=400)
     # import ipdb
     # ipdb.set_trace()
 
@@ -109,19 +110,27 @@ def preprocess_image(img_path):
 def main(img_path):
     sess = tf.Session()
     model = RunModel(config, sess=sess)
+    imgs = open("imgs.json")
+    input_imgs = json.load(imgs)
 
-    input_img, proc_param, img = preprocess_image(img_path)
-    # Add batch dimension: 1 x D x D x 3
-    input_img = np.expand_dims(input_img, 0)
+    i = 0
+    from tqdm import tqdm
+    for img_name in tqdm(input_imgs):
+        # print('{0}/{1}'.format(i, len(input_imgs)), end='\r')
+        input_path = img_path + img_name
+        input_img, proc_param, img = preprocess_image(input_path)
+        # Add batch dimension: 1 x D x D x 3
+        input_img = np.expand_dims(input_img, 0)
 
-    # Theta is the 85D vector holding [camera, pose, shape]
-    # where camera is 3D [s, tx, ty]
-    # pose is 72D vector holding the rotation of 24 joints of SMPL in axis angle format
-    # shape is 10D shape coefficients of SMPL
-    joints, verts, cams, joints3d, theta = model.predict(
-        input_img, get_theta=True)
 
-    visualize(img, proc_param, joints[0], verts[0], cams[0], img_path)
+        # Theta is the 85D vector holding [camera, pose, shape]
+        # where camera is 3D [s, tx, ty]
+        # pose is 72D vector holding the rotation of 24 joints of SMPL in axis angle format
+        # shape is 10D shape coefficients of SMPL
+        joints, verts, cams, joints3d, theta = model.predict(
+            input_img, get_theta=True)
+
+        visualize(img, proc_param, joints[0], verts[0], cams[0], img_name)
 
 
 if __name__ == '__main__':
