@@ -1,0 +1,13 @@
+*.pdf
+GraphCMR/data/*
+instructions.zip
+vlog.zip
+instructions/*
+*demo*
+vlog/*
+.vscode/*
+mypic/*
+100doh_viz/*
+hmr_viz/*
+res/*
+res.tar.xz
