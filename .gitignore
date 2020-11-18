@@ -2,9 +2,7 @@
 GraphCMR/data/*
 instructions.zip
 vlog.zip
-instructions/*
-*demo*
-vlog/*
+data/
 .vscode/*
 mypic/*
 100doh_viz/*
