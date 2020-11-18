@@ -1,3 +1,6 @@
-1. Get input images with 'hand_state_final.txt'
-2. Get hand info from both hand model
-3. Get wrist info from hmr model
+TODO:
+    2. Get hand info from handobj hand model
+
+Done:
+    1. Get input images with 'data/vlog'
+    3. Get wrist info from hmr model

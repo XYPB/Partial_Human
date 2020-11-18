@@ -28,6 +28,9 @@ import os
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = '4'
 
+sys.path.append('..')
+from utils import gen_json
+
 def visualize(img, proc_param, joints, verts, cam, img_name):
     """
     Renders the result in original image coordinate frame.
@@ -90,7 +93,7 @@ def preprocess_image(img_path):
         img = img[:, :, :3]
 
     if np.max(img.shape[:2]) != config.img_size:
-        print('Resizing so the max image size is %d..' % config.img_size)
+        # print('Resizing so the max image size is %d..' % config.img_size)
         scale = (float(config.img_size) / np.max(img.shape[:2]))
     else:
         scale = 1.
@@ -110,13 +113,14 @@ def preprocess_image(img_path):
 def main(img_path):
     sess = tf.Session()
     model = RunModel(config, sess=sess)
-    imgs = open("imgs.json")
+    imgs = open(os.path.join(img_path, 'vlog_imgs.json'))
     input_imgs = json.load(imgs)
 
     i = 0
+    wrists = []
     from tqdm import tqdm
     for img_name in tqdm(input_imgs):
-        input_path = img_path + img_name
+        input_path = os.path.join(img_path, img_name)
         input_img, proc_param, img = preprocess_image(input_path)
         # Add batch dimension: 1 x D x D x 3
         input_img = np.expand_dims(input_img, 0)
@@ -128,9 +132,15 @@ def main(img_path):
         # shape is 10D shape coefficients of SMPL
         joints, verts, cams, joints3d, theta = model.predict(
             input_img, get_theta=True)
-        # print(len(joints[0]))
+        # print(type(joints[0][11]))
+        wrist = {}
+        wrist['filename'] = img_name
+        wrist['left_wrist'] = joints[0][11].tolist()
+        wrist['right_wrist'] = joints[0][6].tolist()
+        wrists.append(wrist)
 
-        visualize(img, proc_param, joints[0], verts[0], cams[0], img_name)
+        # visualize(img, proc_param, joints[0], verts[0], cams[0], img_name)
+    gen_json.genHMRWrist(wrists)
 
 
 if __name__ == '__main__':
@@ -143,4 +153,5 @@ if __name__ == '__main__':
 
     renderer = vis_util.SMPLRenderer(face_path=config.smpl_face_path)
 
-    main(config.img_path)
+    img_path = "../data"
+    main(img_path)
