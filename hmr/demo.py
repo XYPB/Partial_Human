@@ -116,7 +116,6 @@ def main(img_path):
     i = 0
     from tqdm import tqdm
     for img_name in tqdm(input_imgs):
-        # print('{0}/{1}'.format(i, len(input_imgs)), end='\r')
         input_path = img_path + img_name
         input_img, proc_param, img = preprocess_image(input_path)
         # Add batch dimension: 1 x D x D x 3
@@ -129,6 +128,7 @@ def main(img_path):
         # shape is 10D shape coefficients of SMPL
         joints, verts, cams, joints3d, theta = model.predict(
             input_img, get_theta=True)
+        # print(len(joints[0]))
 
         visualize(img, proc_param, joints[0], verts[0], cams[0], img_name)
 

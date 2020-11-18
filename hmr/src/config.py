@@ -56,6 +56,25 @@ flags.DEFINE_string('model_type', 'resnet_fc3_dropout',
 flags.DEFINE_string(
     'joint_type', 'cocoplus',
     'cocoplus (19 keypoints) or lsp 14 keypoints, returned by SMPL. We use cocoplus for evaluation.')
+    #  0: RAnkle
+    #  1: RKnee
+    #  2: RHip
+    #  3: LHip
+    #  4: LKnee
+    #  5: LAnkle
+    #  6: RWrist
+    #  7: RElbow
+    #  8: RShoulder
+    #  9: LShoulder
+    # 10: LElbow
+    # 11: LWrist
+    # 12: Neck
+    # 13: Head (top of)
+    # 14: Nose
+    # 15: LEye
+    # 16: REye
+    # 17: REar
+    # 18: LEar
 
 # visualization settings
 flags.DEFINE_string('write_imgs', 'False',

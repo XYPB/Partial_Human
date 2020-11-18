@@ -114,6 +114,7 @@ class RunModel(object):
             shapes = theta_here[:, (self.num_cam + self.num_theta):]
 
             verts, Js, _ = self.smpl(shapes, poses, get_skin=True)
+            # print(Js.shape)
 
             # Project to 2D!
             pred_kp = self.proj_fn(Js, cams, name='proj_2d_stage%d' % i)
