@@ -97,6 +97,7 @@ flags.DEFINE_string('logdir','hmr_pck_results.txt', 'directory to save test resu
 
 # demo settings
 flags.DEFINE_string('img_path', 'vlog_d_R_8_v_DWeCvOFcdR8_012_frame000931.jpg', 'Image to run')
+flags.DEFINE_string('data_path', '../data', 'data for images')
 
 # Hyperparameters:
 flags.DEFINE_float('e_wd', 0.0001, 'Encoder weight decay')

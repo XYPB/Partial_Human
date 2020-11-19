@@ -50,10 +50,20 @@ for d in ["trainval", "test"]:
     MetadataCatalog.get(f'100DOH_hand_{d}').set(evaluator_type='pascal_voc')
 
 import sys
+import argparse
 sys.path.append('..')
 from utils import gen_json
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--json_path', dest='json_path',
+                        help='',
+                        default='../data/vlog_imgs.json')
+    parser.add_argument('--data_path', dest='data_path',
+                        help='',
+                        default='../data')
+    args=parser.parse_args()
 
     # load cfg and model
     cfg = get_cfg()
@@ -63,7 +73,7 @@ if __name__ == '__main__':
 
     # data path
     # test_img = './viz/input.jpg'
-    imgs = open('../data/vlog_imgs.json')
+    imgs = open(args.json_path)
     test_imgs = json.load(imgs)
     save_dir = '../100doh_viz'
     os.makedirs(save_dir, exist_ok=True)
@@ -74,7 +84,7 @@ if __name__ == '__main__':
     # output
     bboxes = {}
     for img in tqdm(test_imgs):
-        test_img = os.path.join('../data', img)
+        test_img = os.path.join(args.data_path, img)
         im = cv2.imread(test_img)
         outputs = predictor(im)
         #  6: RWrist

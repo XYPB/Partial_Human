@@ -110,17 +110,17 @@ def preprocess_image(img_path):
     return crop, proc_param, disp_img
 
 
-def main(img_path):
+def main(img_path, data_path):
     sess = tf.Session()
     model = RunModel(config, sess=sess)
-    imgs = open(os.path.join(img_path, 'vlog_imgs.json'))
+    imgs = open(img_path)
     input_imgs = json.load(imgs)
 
     i = 0
     wrists = {}
     from tqdm import tqdm
     for img_name in tqdm(input_imgs):
-        input_path = os.path.join(img_path, img_name)
+        input_path = os.path.join(data_path, img_name)
         input_img, proc_param, img = preprocess_image(input_path)
         # Add batch dimension: 1 x D x D x 3
         input_img = np.expand_dims(input_img, 0)
@@ -144,6 +144,7 @@ def main(img_path):
 
 
 if __name__ == '__main__':
+
     config = flags.FLAGS
     config(sys.argv)
     # Using pre-trained model, change this to use your own.
@@ -153,5 +154,4 @@ if __name__ == '__main__':
 
     renderer = vis_util.SMPLRenderer(face_path=config.smpl_face_path)
 
-    img_path = "../data"
-    main(img_path)
+    main(config.img_path, config.data_path)

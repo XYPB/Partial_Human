@@ -71,6 +71,9 @@ def parse_args():
   parser.add_argument('--image_dir', dest='image_dir',
                       help='directory to load images for demo',
                       default="../data")
+  parser.add_argument('--json_dir', dest='json_dir',
+                      help='',
+                      default='../data/vlog_imgs.json')
   parser.add_argument('--save_dir', dest='save_dir',
                       help='directory to save results',
                       default="images_det")
@@ -245,7 +248,8 @@ if __name__ == '__main__':
       print(f'save dir = {args.save_dir}')
       # replace this line with json
       # imglist = os.listdir(args.image_dir)
-      imgjson = open(os.path.join(args.image_dir, 'vlog_imgs.json'))
+      # imgjson = open(os.path.join(args.image_dir, 'vlog_imgs.json'))
+      imgjson = open(args.json_dir, 'r')
       imglist = json.load(imgjson)
       num_images = len(imglist)
 
