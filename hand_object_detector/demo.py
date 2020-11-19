@@ -45,6 +45,8 @@ try:
 except NameError:
     xrange = range  # Python 3
 
+sys.path.append('..')
+from utils import gen_json
 
 def parse_args():
   """
@@ -68,7 +70,7 @@ def parse_args():
                       default="models")
   parser.add_argument('--image_dir', dest='image_dir',
                       help='directory to load images for demo',
-                      default="../data/vlog/all/images")
+                      default="../data")
   parser.add_argument('--save_dir', dest='save_dir',
                       help='directory to save results',
                       default="images_det")
@@ -243,13 +245,14 @@ if __name__ == '__main__':
       print(f'save dir = {args.save_dir}')
       # replace this line with json
       # imglist = os.listdir(args.image_dir)
-      imgjson = open('imgs.json')
+      imgjson = open(os.path.join(args.image_dir, 'vlog_imgs.json'))
       imglist = json.load(imgjson)
       num_images = len(imglist)
 
     print('Loaded Photo: {} images.'.format(num_images))
 
 
+    bboxes = {}
     while (num_images >= 0):
         total_tic = time.time()
         if webcam_num == -1:
@@ -380,6 +383,15 @@ if __name__ == '__main__':
           # 4: score
           # 5: state
           # -1: lr: 0-l 1-r
+
+          newPic = {}
+          # newPic['filename'] = imglist[num_images]
+          newPic['bboxes'] = [] if hand_dets is None else [singHand[0:4].tolist() for singHand in hand_dets]
+          newPic['lr'] = [] if hand_dets is None else [int(singHand[-1]) for singHand in hand_dets]
+          newPic['score'] = [] if hand_dets is None else [float(singHand[4]) for singHand in hand_dets]
+          # print(newPic)
+          bboxes[imglist[num_images]] = newPic
+
           im2show = vis_detections_filtered_objects_PIL(im2show, None, hand_dets, thresh_hand, thresh_obj)
 
         misc_toc = time.time()
@@ -394,8 +406,8 @@ if __name__ == '__main__':
             
             folder_name = args.save_dir
             os.makedirs(folder_name, exist_ok=True)
-            result_path = os.path.join(folder_name, imglist[num_images][:-4] + "_det.png")
-            im2show.save(result_path)
+            # result_path = os.path.join(folder_name, imglist[num_images][:-4] + "_det.png")
+            # im2show.save(result_path)
         else:
             im2showRGB = cv2.cvtColor(im2show, cv2.COLOR_BGR2RGB)
             cv2.imshow("frame", im2showRGB)
@@ -409,3 +421,4 @@ if __name__ == '__main__':
     if webcam_num >= 0:
         cap.release()
         cv2.destroyAllWindows()
+    gen_json.genObjBboxes(bboxes)

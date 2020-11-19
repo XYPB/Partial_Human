@@ -18,15 +18,19 @@ def genImgJson(path="../data/vlog/all/images", imgFormat='jpg'):
     json.dump(imgLst, open('../data/vlog_imgs.json', 'w'))
 
 def genHMRWrist(writs):
-    # writs = [{'filename': <fileName>, 'left_wrist': [x, y], 'right_wrist': [x, y]}...]
+    # writs = {'<fileName>': {'left_wrist': [x, y], 'right_wrist': [x, y]}...}
     with open('../data/wrists.json', 'w') as f:
         json.dump(writs, f)
 
 def genDetecBboxes(bboxes):
-    # bboxes = [{'filename': <fileName>, 'bboxes': [[x0, y0, x1, y1]...], 'score': [...]}...]
+    # bboxes = {'<fileName>': {bboxes': [[x0, y0, x1, y1]...], 'score': [...]}...}
     with open('../data/detect_bboxes.json', 'w') as f:
         json.dump(bboxes, f)
 
+def genObjBboxes(bboxes):
+    # bboxes = {'<fileName>': {'filename': <fileName>, 'bboxes': [[x0, y0, x1, y1]...], 'lr': [<isRight>...], 'score': [...]}...}
+    with open('../data/handobj_bboxes.json', 'w') as f:
+        json.dump(bboxes, f)
 
 if __name__ == '__main__':
     genImgJson()
