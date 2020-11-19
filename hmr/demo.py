@@ -117,7 +117,7 @@ def main(img_path):
     input_imgs = json.load(imgs)
 
     i = 0
-    wrists = []
+    wrists = {}
     from tqdm import tqdm
     for img_name in tqdm(input_imgs):
         input_path = os.path.join(img_path, img_name)
@@ -134,10 +134,10 @@ def main(img_path):
             input_img, get_theta=True)
         # print(type(joints[0][11]))
         wrist = {}
-        wrist['filename'] = img_name
+        # wrist['filename'] = img_name
         wrist['left_wrist'] = joints[0][11].tolist()
         wrist['right_wrist'] = joints[0][6].tolist()
-        wrists.append(wrist)
+        wrists[img_name] = wrist
 
         # visualize(img, proc_param, joints[0], verts[0], cams[0], img_name)
     gen_json.genHMRWrist(wrists)

@@ -20,3 +20,7 @@ if [[ $? == 0 ]]; then
     CUDA_VISIBLE_DEVICES=$GPU python demo.py
 fi
 
+cd ../hand_object_detector && conda activate handobj
+if [[ $? == 0 ]]; then
+    CUDA_VISIBLE_DEVICES=$GPU python demo.py --cuda --checkepoch=8 --checkpoint=132028
+fi

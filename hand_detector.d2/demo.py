@@ -72,7 +72,7 @@ if __name__ == '__main__':
     predictor = DefaultPredictor(cfg)
 
     # output
-    bboxes = []
+    bboxes = {}
     for img in tqdm(test_imgs):
         test_img = os.path.join('../data', img)
         im = cv2.imread(test_img)
@@ -87,10 +87,10 @@ if __name__ == '__main__':
 
         # cv2.imwrite(save_dir + '/100doh_' + img, v.get_image()[:, :, ::-1])
         bbox = {}
-        bbox['filename'] = img
+        # bbox['filename'] = img
         bbox['bboxes'] = outputs['instances'].to('cpu').pred_boxes.tensor.numpy().tolist()
         bbox['score'] = outputs['instances'].to('cpu').scores.numpy().tolist()
-        bboxes.append(bbox)
+        bboxes[img] = bbox
     gen_json.genDetecBboxes(bboxes)
 
     # print
