@@ -7,7 +7,7 @@ import json
 import os
 from tqdm import tqdm
 
-def genImgJson(path="../data/vlog/all/images", imgFormat='jpg'):
+def genFromPath(path="../data/vlog/all/images", imgFormat='jpg'):
     g = os.walk(path)
     imgLst = []
     for path, dirLst, fileLst in g:
@@ -16,6 +16,17 @@ def genImgJson(path="../data/vlog/all/images", imgFormat='jpg'):
     # for local test
     imgLst = imgLst[0:10]
     json.dump(imgLst, open('../data/vlog_imgs.json', 'w'))
+
+def genFromFile(path="../hand_state_final.txt", imgFormat='jpg'):
+    imgLst = []
+    usageLst = []
+    with open(path, 'r') as f:
+        for line in tqdm(f.readlines()):
+            line = line.strip()
+            line = line.split(' ')
+            imgLst.append(line[0])
+            usageLst.append(line[1])
+    json.dump([imgLst, usageLst], open('../data/complete_vlog_imgs.json', 'w'))
 
 def genHMRWrist(writs):
     # writs = {'<fileName>': {'left_wrist': [x, y], 'right_wrist': [x, y]}...}
@@ -33,5 +44,6 @@ def genObjBboxes(bboxes):
         json.dump(bboxes, f)
 
 if __name__ == '__main__':
-    genImgJson()
+    genFromPath()
+    genFromFile()
 
