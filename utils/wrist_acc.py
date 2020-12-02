@@ -18,7 +18,8 @@ def d2_acc(hmr_json, d2_json):
     d2_bboxes = json.load(d2_data)
 
     total_num = len(hmr_wrists)
-    correct_num = 0
+    l_correct_num = 0
+    r_correct_num = 0
     not_found_img = 0
     for img in tqdm(hmr_wrists.keys()):
         if d2_bboxes[img] is None:
@@ -40,14 +41,17 @@ def d2_acc(hmr_json, d2_json):
                 r_count += 1
 
         # print('{0} : {1}'.format(l_count, r_count))
-        if (l_count > 0 and r_count > 0):
-            correct_num += 1
+        if (l_count > 0):
+            l_correct_num += 1
+        if (r_count > 0):
+            r_correct_num += 1
 
-    acc = float(correct_num) / float(total_num - not_found_img)
-    return acc
+    l_acc = float(l_correct_num) / float(total_num - not_found_img)
+    r_acc = float(r_correct_num) / float(total_num - not_found_img)
+    return l_acc, r_acc
 
 
 if __name__ == '__main__':
-    acc = d2_acc('../data/wrists.json', '../data/detect_bboxes.json')
-    print(acc)
+    l_acc, r_acc = d2_acc('../data/wrists.json', '../data/detect_bboxes.json')
+    print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
 
