@@ -14,7 +14,7 @@ def genFromPath(path="../data/vlog/all/images", imgFormat='jpg'):
         for fileName in tqdm(fileLst):
             imgLst.append(os.path.join('vlog/all/images', fileName))
     # for local test
-    imgLst = imgLst[0:10]
+    # imgLst = imgLst[0:10]
     json.dump(imgLst, open('../data/vlog_imgs.json', 'w'))
 
 def genFromFile(path="../hand_state_final.txt", imgFormat='jpg'):
