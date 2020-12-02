@@ -1,6 +1,5 @@
 TODO:
-    2. Get hand info from handobj hand model
 
 Done:
-    1. Get input images with 'data/vlog'
-    3. Get wrist info from hmr model
+    1. get original wrist position
+    

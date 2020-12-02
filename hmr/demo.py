@@ -135,8 +135,13 @@ def main(img_path, data_path):
         # print(type(joints[0][11]))
         wrist = {}
         # wrist['filename'] = img_name
-        wrist['left_wrist'] = joints[0][11].tolist()
-        wrist['right_wrist'] = joints[0][6].tolist()
+
+        cam_for_render, vert_shifted, joints_orig = vis_util.get_original(
+        proc_param, verts[0], cams[0], joints[0], img_size=img.shape[:2])
+
+        # record original position
+        wrist['left_wrist'] = joints_orig[11].tolist()
+        wrist['right_wrist'] = joints_orig[6].tolist()
         wrists[img_name] = wrist
 
         # visualize(img, proc_param, joints[0], verts[0], cams[0], img_name)
