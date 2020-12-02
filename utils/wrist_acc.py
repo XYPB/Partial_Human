@@ -4,7 +4,11 @@ from tqdm import tqdm
 
 
 def bbox_test(wrist, bbox, scale = 1.0):
-    bbox_scaled = [coord * scale for coord in bbox]
+    dx = bbox[2] - bbox[0]
+    dy = bbox[3] - bbox[1]
+    dx_scaled = (scale - 1.0) * dx / 2.0
+    dy_scaled = (scale - 1.0) * dy / 2.0
+    bbox_scaled = [bbox[0] - dx_scaled, bbox[1] - dy_scaled, bbox[2] + dx_scaled, bbox[3] + dy_scaled]
     return (wrist[0] > bbox_scaled[0] and wrist[0] < bbox_scaled[2]) and (wrist[1] > bbox_scaled[1] and wrist[1] < bbox_scaled[3])
 
 def d2_acc(hmr_json, d2_json):
