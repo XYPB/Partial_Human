@@ -35,7 +35,7 @@ def d2_acc(hmr_json, d2_json):
             if bbox_test(r_wrist, bbox, 1.2):
                 r_count += 1
 
-        print('{0} : {1}'.format(l_count, r_count))
+        # print('{0} : {1}'.format(l_count, r_count))
         if (l_count > 0 and r_count > 0):
             correct_num += 1
 
