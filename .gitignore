@@ -8,7 +8,7 @@ mypic/*
 100doh_viz/*
 hmr_viz/*
 res/*
-res.tar.xz
+*.tar.xz
 
 frame_cache
 /hmr/models.tar.gz
