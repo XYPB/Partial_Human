@@ -275,6 +275,8 @@ if __name__ == '__main__':
           im_in = cv2.imread(im_file)
         # bgr
         im = im_in
+        print("debug p1")
+
 
         blobs, im_scales = _get_image_blob(im)
         assert len(im_scales) == 1, "Only single-image batch implemented"
@@ -285,6 +287,7 @@ if __name__ == '__main__':
         im_data_pt = im_data_pt.permute(0, 3, 1, 2)
         im_info_pt = torch.from_numpy(im_info_np)
 
+        print("debug p2")
         with torch.no_grad():
                 im_data.resize_(im_data_pt.size()).copy_(im_data_pt)
                 im_info.resize_(im_info_pt.size()).copy_(im_info_pt)
@@ -315,7 +318,6 @@ if __name__ == '__main__':
         # get hand side 
         lr = torch.sigmoid(lr_vector) > 0.5
         lr = lr.squeeze(0).float()
-        print("debug p1")
 
         if cfg.TEST.BBOX_REG:
             # Apply bounding-box regression deltas
@@ -353,7 +355,6 @@ if __name__ == '__main__':
         det_toc = time.time()
         detect_time = det_toc - det_tic
         misc_tic = time.time()
-        print("debug p2")
         if vis:
             im2show = np.copy(im)
         obj_dets, hand_dets = None, None
