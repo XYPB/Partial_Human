@@ -275,7 +275,6 @@ if __name__ == '__main__':
           im_in = cv2.imread(im_file)
         # bgr
         im = im_in
-        print("debug p1")
 
 
         blobs, im_scales = _get_image_blob(im)
@@ -287,7 +286,6 @@ if __name__ == '__main__':
         im_data_pt = im_data_pt.permute(0, 3, 1, 2)
         im_info_pt = torch.from_numpy(im_info_np)
 
-        print("debug p2")
         with torch.no_grad():
                 im_data.resize_(im_data_pt.size()).copy_(im_data_pt)
                 im_info.resize_(im_info_pt.size()).copy_(im_info_pt)
@@ -295,6 +293,7 @@ if __name__ == '__main__':
                 num_boxes.resize_(1).zero_()
                 box_info.resize_(1, 1, 5).zero_() 
 
+        print("debug p1")
         # pdb.set_trace()
         det_tic = time.time()
 
@@ -306,11 +305,13 @@ if __name__ == '__main__':
         scores = cls_prob.data
         boxes = rois.data[:, :, 1:5]
 
+        print("debug p2")
         # extact predicted params
         contact_vector = loss_list[0][0] # hand contact state info
         offset_vector = loss_list[1][0].detach() # offset vector (factored into a unit vector and a magnitude)
         lr_vector = loss_list[2][0].detach() # hand side info (left/right)
 
+        print("debug p3")
         # get hand contact 
         _, contact_indices = torch.max(contact_vector, 2)
         contact_indices = contact_indices.squeeze(0).unsqueeze(-1).float()
@@ -399,7 +400,6 @@ if __name__ == '__main__':
           newPic['score'] = [] if hand_dets is None else [float(singHand[4]) for singHand in hand_dets]
           # print(newPic)
           bboxes[imglist[num_images]] = newPic
-          print("debug p3")
 
           im2show = vis_detections_filtered_objects_PIL(im2show, None, hand_dets, thresh_hand, thresh_obj)
 
