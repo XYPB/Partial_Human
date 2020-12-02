@@ -271,6 +271,7 @@ if __name__ == '__main__':
         # Load the demo image
         else:
           im_file = os.path.join(args.image_dir, imglist[num_images])
+          print(im_file)
           im_in = cv2.imread(im_file)
         # bgr
         im = im_in
