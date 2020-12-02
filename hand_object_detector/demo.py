@@ -293,19 +293,19 @@ if __name__ == '__main__':
                 num_boxes.resize_(1).zero_()
                 box_info.resize_(1, 1, 5).zero_() 
 
-        print("debug p1")
         # pdb.set_trace()
         det_tic = time.time()
 
+        print("debug p1")
         rois, cls_prob, bbox_pred, \
         rpn_loss_cls, rpn_loss_box, \
         RCNN_loss_cls, RCNN_loss_bbox, \
         rois_label, loss_list = fasterRCNN(im_data, im_info, gt_boxes, num_boxes, box_info) 
+        print("debug p2")
 
         scores = cls_prob.data
         boxes = rois.data[:, :, 1:5]
 
-        print("debug p2")
         # extact predicted params
         contact_vector = loss_list[0][0] # hand contact state info
         offset_vector = loss_list[1][0].detach() # offset vector (factored into a unit vector and a magnitude)
