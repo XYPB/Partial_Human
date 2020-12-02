@@ -314,6 +314,7 @@ if __name__ == '__main__':
         # get hand side 
         lr = torch.sigmoid(lr_vector) > 0.5
         lr = lr.squeeze(0).float()
+        print("debug p1")
 
         if cfg.TEST.BBOX_REG:
             # Apply bounding-box regression deltas
@@ -351,6 +352,7 @@ if __name__ == '__main__':
         det_toc = time.time()
         detect_time = det_toc - det_tic
         misc_tic = time.time()
+        print("debug p2")
         if vis:
             im2show = np.copy(im)
         obj_dets, hand_dets = None, None
@@ -395,6 +397,7 @@ if __name__ == '__main__':
           newPic['score'] = [] if hand_dets is None else [float(singHand[4]) for singHand in hand_dets]
           # print(newPic)
           bboxes[imglist[num_images]] = newPic
+          print("debug p3")
 
           im2show = vis_detections_filtered_objects_PIL(im2show, None, hand_dets, thresh_hand, thresh_obj)
 
