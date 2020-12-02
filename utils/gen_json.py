@@ -34,7 +34,7 @@ def genHMRWrist(writs):
         json.dump(writs, f)
 
 def genDetecBboxes(bboxes):
-    # bboxes = {'<fileName>': {bboxes': [[x0, y0, x1, y1]...], 'score': [...]}...}
+    # bboxes = {'<fileName>': {'bboxes': [[x0, y0, x1, y1]...], 'score': [...]}...}
     with open('../data/detect_bboxes.json', 'w') as f:
         json.dump(bboxes, f)
 
