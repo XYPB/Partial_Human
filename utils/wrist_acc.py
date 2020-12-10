@@ -23,7 +23,7 @@ def d2_acc(hmr_json, d2_json):
     not_found_img = 0
     for img in tqdm(hmr_wrists.keys()):
         if d2_bboxes[img] is None:
-            print("image {img} does not exist in detector result!")
+            print("image {0} does not exist in detector result!".format(img))
             not_found_img += 1
             continue
 
@@ -50,8 +50,54 @@ def d2_acc(hmr_json, d2_json):
     r_acc = float(r_correct_num) / float(total_num - not_found_img)
     return l_acc, r_acc
 
+def obj_acc(hmr_json, obj_json):
+    hmr_data = open(hmr_json)
+    hmr_wrists = json.load(hmr_data)
+    obj_data = open(obj_json)
+    obj_bboxes = json.load(obj_data)
+
+    total_num = len(hmr_wrists)
+    l_correct_num = 0
+    r_correct_num = 0
+    not_found_img = 0
+    for img in tqdm(hmr_wrists.keys()):
+        if obj_bboxes[img] is None:
+            print("image {0} does not exist in detector result!".format(img))
+            not_found_img += 1
+            continue
+
+        bboxes = obj_bboxes[img]['bboxes']
+        lr_info = obj_bboxes[img]['lr']
+        l_wrist = hmr_wrists[img]['left_wrist']
+        r_wrist = hmr_wrists[img]['right_wrist']
+
+        l_count = 0
+        r_count = 0
+        if len(lr_info) is not len(bboxes):
+            print('image {0} size does not match'.format(img))
+
+        for i in range(len(lr_info)):
+            bbox = bboxes[i]
+            lr = lr_info[i]
+            if not lr and bbox_test(l_wrist, bbox, 1.2):
+                l_count += 1
+            elif bbox_test(r_wrist, bbox, 1.2):
+                r_count += 1
+        
+        if (l_count > 0):
+            l_correct_num += 1
+        if (r_count > 0):
+            r_correct_num += 1
+
+    l_acc = float(l_correct_num) / float(total_num - not_found_img)
+    r_acc = float(r_correct_num) / float(total_num - not_found_img)
+    return l_acc, r_acc
+
 
 if __name__ == '__main__':
     l_acc, r_acc = d2_acc('../data/wrists.json', '../data/detect_bboxes.json')
+    print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
+
+    l_acc, r_acc = obj_acc('../data/wrists.json', '../data/handobj_bboxes.json')
     print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
 

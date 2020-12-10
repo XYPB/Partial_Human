@@ -39,7 +39,7 @@ def genDetecBboxes(bboxes):
         json.dump(bboxes, f)
 
 def genObjBboxes(bboxes):
-    # bboxes = {'<fileName>': {'filename': <fileName>, 'bboxes': [[x0, y0, x1, y1]...], 'lr': [<isRight>...], 'score': [...]}...}
+    # bboxes = {'<fileName>': {'bboxes': [[x0, y0, x1, y1]...], 'lr': [<isRight>...], 'score': [...]}...}
     with open('../data/handobj_bboxes.json', 'w') as f:
         json.dump(bboxes, f)
 
