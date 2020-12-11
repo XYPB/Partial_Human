@@ -156,7 +156,7 @@ def main(img_path, data_path):
             # record original position
             wrist['left_wrist'] = joints_orig[11].tolist()
             wrist['right_wrist'] = joints_orig[6].tolist()
-            wrists[img_name[:-4] + '_' + str(shift[i]) + '.jpg'] = wrist
+            wrists[img_name[:-4] + '_' + str(shift[i]) + img_name[-4:]] = wrist
 
             # visualize(img, proc_param, joints[0], verts[0], cams[0], img_name)
     gen_json.genHMRWrist(wrists)

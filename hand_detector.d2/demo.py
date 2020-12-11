@@ -105,7 +105,7 @@ if __name__ == '__main__':
             # bbox['filename'] = img
             bbox['bboxes'] = outputs['instances'].to('cpu').pred_boxes.tensor.numpy().tolist()
             bbox['score'] = outputs['instances'].to('cpu').scores.numpy().tolist()
-            bboxes[img[:-4] + '_' + str(args.shift[i]) + '.jpg'] = bbox
+            bboxes[img[:-4] + '_' + str(args.shift[i]) + img[-4:]] = bbox
     gen_json.genDetecBboxes(bboxes)
 
     # print

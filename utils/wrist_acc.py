@@ -115,6 +115,34 @@ def img_shift_padding(img, shift=[-20, -10, 0, 10, 20]):
 
     return res
 
+def cal_var(bboxes):
+    bboxes_trans = np.transpose(bboxes)
+    total_var = 0
+    assert(bboxes_trans.shape[0] == 4)
+    for coords in bboxes_trans:
+        mean = float(sum(coords)) / float(len(coords))
+        var = sum([(coord - mean) ** 2 for coord in coords]) / float(len(coords) - 1)
+        total_var += var
+
+    return total_var
+
+def shifted_var(img_path, bboxes_path, shift=[-20, -10, 0, 10, 20]):
+    img_files = open(img_path)
+    img_list = json.load(img_files)
+    bboxes_file = open(bboxes_path)
+    bboxes_list = json.load(bboxes_file)
+
+    for img_name in img_list:
+        for i in range(len(shift)):
+            shifted_name = img_name[:-4] + '_' + str(shift[i]) + img_name[-4:]
+            if bboxes_list[shifted_name] is None:
+                print('{0} not found in the bboxes list'.format(shifted_name))
+
+            
+            bboxes = bboxes_list[shifted_name]['bboxes']
+
+
+
 
 if __name__ == '__main__':
     l_acc, r_acc = d2_acc('../data/wrists.json', '../data/detect_bboxes.json')

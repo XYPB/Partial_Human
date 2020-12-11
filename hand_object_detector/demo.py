@@ -420,7 +420,7 @@ if __name__ == '__main__':
                     newPic['score'] = [] if hand_dets is None else [
                         float(singHand[4]) for singHand in hand_dets]
                     # print(newPic)
-                    bboxes[imglist[num_images][:-4] + '_' + str(args.shift[i]) + '.jpg'] = newPic
+                    bboxes[imglist[num_images][:-4] + '_' + str(args.shift[i]) + imglist[num_images][-4:]] = newPic
 
                     im2show = vis_detections_filtered_objects_PIL(
                         im2show, None, hand_dets, thresh_hand, thresh_obj)
