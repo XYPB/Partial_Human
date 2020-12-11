@@ -53,6 +53,7 @@ import sys
 import argparse
 sys.path.append('..')
 from utils import gen_json
+from utils import wrist_acc
 
 if __name__ == '__main__':
 
@@ -60,6 +61,9 @@ if __name__ == '__main__':
     parser.add_argument('--json_path', dest='json_path',
                         help='',
                         default='../data/vlog_imgs.json')
+    parser.add_argument('--shift', dest='shift',
+                        help='shift the img for more result',
+                        default=[-20, -10, 0, 10, 20], type=list)
     parser.add_argument('--data_path', dest='data_path',
                         help='',
                         default='../data')
@@ -85,22 +89,23 @@ if __name__ == '__main__':
     bboxes = {}
     for img in tqdm(test_imgs):
         test_img = os.path.join(args.data_path, img)
-        im = cv2.imread(test_img)
-        outputs = predictor(im)
-        #  6: RWrist
-        # 11: LWrist
-        v = Visualizer(im[:, :, ::-1], MetadataCatalog.get(cfg.DATASETS.TRAIN[0]), scale=1.2)
-        v = v.draw_instance_predictions(outputs["instances"].to("cpu"))
-        # [x0, y0, x1, y1]
-        # print(outputs['instances'].to('cpu').pred_boxes.tensor.numpy())
-        # print(outputs['instances'].to('cpu').scores.numpy())
+        im_in = cv2.imread(test_img)
+        ims = wrist_acc.img_shift_padding(im_in, args.shift)
+        for i in range(len(ims)):
+            im = ims[i]
+            outputs = predictor(im)
+            #  6: RWrist
+            # 11: LWrist
+            v = Visualizer(im[:, :, ::-1], MetadataCatalog.get(cfg.DATASETS.TRAIN[0]), scale=1.2)
+            v = v.draw_instance_predictions(outputs["instances"].to("cpu"))
+            # [x0, y0, x1, y1]
 
-        # cv2.imwrite(save_dir + '/100doh_' + img, v.get_image()[:, :, ::-1])
-        bbox = {}
-        # bbox['filename'] = img
-        bbox['bboxes'] = outputs['instances'].to('cpu').pred_boxes.tensor.numpy().tolist()
-        bbox['score'] = outputs['instances'].to('cpu').scores.numpy().tolist()
-        bboxes[img] = bbox
+            # cv2.imwrite(save_dir + '/100doh_' + img, v.get_image()[:, :, ::-1])
+            bbox = {}
+            # bbox['filename'] = img
+            bbox['bboxes'] = outputs['instances'].to('cpu').pred_boxes.tensor.numpy().tolist()
+            bbox['score'] = outputs['instances'].to('cpu').scores.numpy().tolist()
+            bboxes[img[:-4] + '_' + str(args.shift[i]) + '.jpg'] = bbox
     gen_json.genDetecBboxes(bboxes)
 
     # print
