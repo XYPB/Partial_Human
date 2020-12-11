@@ -111,7 +111,7 @@ def img_shift_padding(img, shift=[-20, -10, 0, 10, 20]):
             r[s:, s:] = img_cpy[s:, s:]
         else:
             r[:s, :s] = img_cpy[:s, :s]
-        res.append(r)
+        res.append(r.astype(np.uint8))
 
     return res
 
