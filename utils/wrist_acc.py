@@ -1,15 +1,19 @@
 import numpy as np
 import json
 from tqdm import tqdm
+import cv2
+import copy
 
 
-def bbox_test(wrist, bbox, scale = 1.0):
+def bbox_test(wrist, bbox, scale=1.0):
     dx = bbox[2] - bbox[0]
     dy = bbox[3] - bbox[1]
     dx_scaled = (scale - 1.0) * dx / 2.0
     dy_scaled = (scale - 1.0) * dy / 2.0
-    bbox_scaled = [bbox[0] - dx_scaled, bbox[1] - dy_scaled, bbox[2] + dx_scaled, bbox[3] + dy_scaled]
+    bbox_scaled = [bbox[0] - dx_scaled, bbox[1] -
+                   dy_scaled, bbox[2] + dx_scaled, bbox[3] + dy_scaled]
     return (wrist[0] > bbox_scaled[0] and wrist[0] < bbox_scaled[2]) and (wrist[1] > bbox_scaled[1] and wrist[1] < bbox_scaled[3])
+
 
 def d2_acc(hmr_json, d2_json):
     hmr_data = open(hmr_json)
@@ -50,6 +54,7 @@ def d2_acc(hmr_json, d2_json):
     r_acc = float(r_correct_num) / float(total_num - not_found_img)
     return l_acc, r_acc
 
+
 def obj_acc(hmr_json, obj_json):
     hmr_data = open(hmr_json)
     hmr_wrists = json.load(hmr_data)
@@ -83,7 +88,7 @@ def obj_acc(hmr_json, obj_json):
                 l_count += 1
             elif bbox_test(r_wrist, bbox, 1.2):
                 r_count += 1
-        
+
         if (l_count > 0):
             l_correct_num += 1
         if (r_count > 0):
@@ -94,10 +99,64 @@ def obj_acc(hmr_json, obj_json):
     return l_acc, r_acc
 
 
+def img_shift_padding(img, shift=[-20, -10, 0, 10, 20]):
+    shape = img.shape
+    assert(len(shape) == 3 and shape[2] == 3)
+    res = []
+    for s in shift:
+        img_cpy = copy.deepcopy(img)
+        img_cpy = np.roll(np.roll(img_cpy, s, axis=0), s, axis=1)
+        r = np.zeros(shape)
+        if s >= 0:
+            r[s:, s:] = img_cpy[s:, s:]
+        else:
+            r[:s, :s] = img_cpy[:s, :s]
+        res.append(r.astype(np.uint8))
+
+    return res
+
+def cal_var(bboxes):
+    bboxes_trans = np.transpose(bboxes)
+    total_var = 0
+    assert(bboxes_trans.shape[0] == 4)
+    for coords in bboxes_trans:
+        mean = float(sum(coords)) / float(len(coords))
+        var = sum([(coord - mean) ** 2 for coord in coords]) / float(len(coords) - 1)
+        total_var += var
+
+    return total_var
+
+def shifted_var(img_path, bboxes_path, shift=[-20, -10, 0, 10, 20]):
+    img_files = open(img_path)
+    img_list = json.load(img_files)
+    bboxes_file = open(bboxes_path)
+    bboxes_list = json.load(bboxes_file)
+
+    for img_name in img_list:
+        for i in range(len(shift)):
+            shifted_name = img_name[:-4] + '_' + str(shift[i]) + img_name[-4:]
+            if bboxes_list[shifted_name] is None:
+                print('{0} not found in the bboxes list'.format(shifted_name))
+
+            
+            bboxes = bboxes_list[shifted_name]['bboxes']
+
+
+
+
 if __name__ == '__main__':
     l_acc, r_acc = d2_acc('../data/wrists.json', '../data/detect_bboxes.json')
     print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
 
-    l_acc, r_acc = obj_acc('../data/wrists.json', '../data/handobj_bboxes.json')
+    l_acc, r_acc = obj_acc('../data/wrists.json',
+                           '../data/handobj_bboxes.json')
     print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
 
+    # img shift padding test
+    img = cv2.imread('../hmr/demo/vlog_q_u_Q_v_qNSfZz0HquQ_017_frame000151.jpg')
+
+    shift=[-20, -10, 0, 10, 20]
+    res = img_shift_padding(img, shift)
+
+    for i in range(5):
+        cv2.imwrite('../data/shifted_' + str(shift[i]) + '.png', res[i])
