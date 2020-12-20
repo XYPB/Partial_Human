@@ -116,6 +116,8 @@ def img_shift_padding(img, shift=[-20, -10, 0, 10, 20]):
     return res
 
 def cal_var(bboxes):
+    # input should be of size (4, n)
+    # where n is the length of the shifted array
     bboxes_trans = np.transpose(bboxes)
     total_var = 0
     assert(bboxes_trans.shape[0] == 4)
@@ -132,14 +134,28 @@ def shifted_var(img_path, bboxes_path, shift=[-20, -10, 0, 10, 20]):
     bboxes_file = open(bboxes_path)
     bboxes_list = json.load(bboxes_file)
 
+    img_var = {}
     for img_name in img_list:
+        left_bboxes = []
+        right_bboxes = []
         for i in range(len(shift)):
             shifted_name = img_name[:-4] + '_' + str(shift[i]) + img_name[-4:]
             if bboxes_list[shifted_name] is None:
                 print('{0} not found in the bboxes list'.format(shifted_name))
+                continue
 
-            
             bboxes = bboxes_list[shifted_name]['bboxes']
+            for i in range(len(bboxes)):
+                if bboxes_list[shifted_name]['lr'][i]:
+                    right_bboxes.append(bboxes[i])
+                else:
+                    left_bboxes.append(bboxes[i])
+
+        left_var = cal_var(left_bboxes)
+        right_var = cal_var(right_bboxes)
+        new_var = {}
+
+
 
 
 
