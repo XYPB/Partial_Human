@@ -116,9 +116,12 @@ def img_shift_padding(img, shift=[-20, -10, 0, 10, 20]):
     return res
 
 
-def cal_var(bboxes):
+def cal_var(bboxes, shift=[-20, -10, 0, 10, 20]):
     # input should be of size (n, 4)
     # where n is the length of the shifting array
+    # remove missing hand
+    for i in range(len(shift)):
+        bboxes[i] = [coord - shift[i] for coord in bboxes[i]]
     bboxes_trans = np.transpose(bboxes)
     total_var = 0
     if (bboxes_trans.shape[0] != 4):
@@ -168,8 +171,8 @@ def shifted_var(img_path, bboxes_path, shift=[-20, -10, 0, 10, 20]):
             left_bboxes.append(l_high)
             right_bboxes.append(r_high)
 
-        left_var = cal_var(left_bboxes)
-        right_var = cal_var(right_bboxes)
+        left_var = cal_var(left_bboxes, shift)
+        right_var = cal_var(right_bboxes, shift)
         img_var[img_name] = [left_var, right_var]
     return img_var
 
