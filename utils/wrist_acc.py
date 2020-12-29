@@ -185,14 +185,6 @@ if __name__ == '__main__':
                            '../data/handobj_bboxes.json')
     print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
 
-    # img shift padding test
-    # img = cv2.imread('../hmr/demo/vlog_q_u_Q_v_qNSfZz0HquQ_017_frame000151.jpg')
-
-    # shift=[-20, -10, 0, 10, 20]
-    # res = img_shift_padding(img, shift)
-
-    # for i in range(5):
-    #     cv2.imwrite('../data/shifted_' + str(shift[i]) + '.png', res[i])
     img_vars = shifted_var('../data/vlog_imgs.json',
                            '../data/handobj_bboxes.json')
     for img_name in img_vars.keys():
