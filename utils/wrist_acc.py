@@ -115,20 +115,26 @@ def img_shift_padding(img, shift=[-20, -10, 0, 10, 20]):
 
     return res
 
+
 def cal_var(bboxes):
-    # input should be of size (4, n)
-    # where n is the length of the shifted array
+    # input should be of size (n, 4)
+    # where n is the length of the shifting array
     bboxes_trans = np.transpose(bboxes)
     total_var = 0
-    assert(bboxes_trans.shape[0] == 4)
+    if (bboxes_trans.shape[0] != 4):
+        # print('No hand detected!')
+        return -1
     for coords in bboxes_trans:
         mean = float(sum(coords)) / float(len(coords))
-        var = sum([(coord - mean) ** 2 for coord in coords]) / float(len(coords) - 1)
+        var = sum([(coord - mean) ** 2 for coord in coords]) / \
+            float(len(coords) - 1)
         total_var += var
 
     return total_var
 
+
 def shifted_var(img_path, bboxes_path, shift=[-20, -10, 0, 10, 20]):
+    # assuming only use the object model
     img_files = open(img_path)
     img_list = json.load(img_files)
     bboxes_file = open(bboxes_path)
@@ -144,20 +150,28 @@ def shifted_var(img_path, bboxes_path, shift=[-20, -10, 0, 10, 20]):
                 print('{0} not found in the bboxes list'.format(shifted_name))
                 continue
 
+            # seprate into left and right & pick the one with heightest score
+            l_high_score = -1
+            r_high_score = -1
+            r_high = []
+            l_high = []
             bboxes = bboxes_list[shifted_name]['bboxes']
             for i in range(len(bboxes)):
-                if bboxes_list[shifted_name]['lr'][i]:
-                    right_bboxes.append(bboxes[i])
-                else:
-                    left_bboxes.append(bboxes[i])
+                # print(bboxes_list[shifted_name]['score'][i])
+                if bboxes_list[shifted_name]['lr'][i] and bboxes_list[shifted_name]['score'][i] > r_high_score:
+                    r_high_score = bboxes_list[shifted_name]['score'][i]
+                    r_high = bboxes[i]
+                elif (not bboxes_list[shifted_name]['lr'][i]) and bboxes_list[shifted_name]['score'][i] > l_high_score:
+                    l_high_score = bboxes_list[shifted_name]['score'][i]
+                    l_high = bboxes[i]
+
+            left_bboxes.append(l_high)
+            right_bboxes.append(r_high)
 
         left_var = cal_var(left_bboxes)
         right_var = cal_var(right_bboxes)
-        new_var = {}
-
-
-
-
+        img_var[img_name] = [left_var, right_var]
+    return img_var
 
 
 if __name__ == '__main__':
@@ -169,10 +183,15 @@ if __name__ == '__main__':
     print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
 
     # img shift padding test
-    img = cv2.imread('../hmr/demo/vlog_q_u_Q_v_qNSfZz0HquQ_017_frame000151.jpg')
+    # img = cv2.imread('../hmr/demo/vlog_q_u_Q_v_qNSfZz0HquQ_017_frame000151.jpg')
 
-    shift=[-20, -10, 0, 10, 20]
-    res = img_shift_padding(img, shift)
+    # shift=[-20, -10, 0, 10, 20]
+    # res = img_shift_padding(img, shift)
 
-    for i in range(5):
-        cv2.imwrite('../data/shifted_' + str(shift[i]) + '.png', res[i])
+    # for i in range(5):
+    #     cv2.imwrite('../data/shifted_' + str(shift[i]) + '.png', res[i])
+    img_vars = shifted_var('../data/vlog_imgs.json',
+                           '../data/handobj_bboxes.json')
+    for img_name in img_vars.keys():
+        print('{0} have variance: left: {1}, right: {2}'.format(
+            img_name, img_vars[img_name][0], img_vars[img_name][1]))

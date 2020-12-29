@@ -1,6 +1,4 @@
 TODO:
-    1. Get the bboxes with highest score, consider only the hand obj model
     2. Calculate the variance of shifted bboxes
 
-Done:
     
