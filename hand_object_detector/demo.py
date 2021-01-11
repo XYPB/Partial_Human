@@ -81,7 +81,7 @@ def parse_args():
                         default='../data/vlog_imgs.json')
     parser.add_argument('--save_dir', dest='save_dir',
                         help='directory to save results',
-                        default="images_det")
+                        default="../handobj_viz")
     parser.add_argument('--cuda', dest='cuda',
                         help='whether use CUDA',
                         action='store_true')
@@ -437,7 +437,7 @@ if __name__ == '__main__':
 
                     folder_name = args.save_dir
                     os.makedirs(folder_name, exist_ok=True)
-                    result_path = os.path.join(folder_name, imglist[num_images][:-4] + '_' + str(args.shift[i]) + "_det.png")
+                    result_path = os.path.join(folder_name, imglist[num_images][:-4].split('/')[-1] + '_' + str(args.shift[i]) + "_det.png")
                     im2show.save(result_path)
                 else:
                     im2showRGB = cv2.cvtColor(im2show, cv2.COLOR_BGR2RGB)
