@@ -437,8 +437,8 @@ if __name__ == '__main__':
 
                     folder_name = args.save_dir
                     os.makedirs(folder_name, exist_ok=True)
-                    # result_path = os.path.join(folder_name, imglist[num_images][:-4] + "_det.png")
-                    # im2show.save(result_path)
+                    result_path = os.path.join(folder_name, imglist[num_images][:-4] + '_' + str(args.shift[i]) + "_det.png")
+                    im2show.save(result_path)
                 else:
                     im2showRGB = cv2.cvtColor(im2show, cv2.COLOR_BGR2RGB)
                     cv2.imshow("frame", im2showRGB)

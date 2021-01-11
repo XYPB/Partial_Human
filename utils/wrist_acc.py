@@ -178,12 +178,12 @@ def shifted_var(img_path, bboxes_path, shift=[-20, -10, 0, 10, 20]):
 
 
 if __name__ == '__main__':
-    l_acc, r_acc = d2_acc('../data/wrists.json', '../data/detect_bboxes.json')
-    print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
+    # l_acc, r_acc = d2_acc('../data/wrists.json', '../data/detect_bboxes.json')
+    # print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
 
-    l_acc, r_acc = obj_acc('../data/wrists.json',
-                           '../data/handobj_bboxes.json')
-    print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
+    # l_acc, r_acc = obj_acc('../data/wrists.json',
+    #                        '../data/handobj_bboxes.json')
+    # print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
 
     img_vars = shifted_var('../data/vlog_imgs.json',
                            '../data/handobj_bboxes.json')
