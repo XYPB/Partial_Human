@@ -10,6 +10,7 @@ hmr_viz/*
 handobj_viz/*
 res/*
 *.tar.xz
+var_res.txt
 
 frame_cache
 /hmr/models.tar.gz
