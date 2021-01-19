@@ -187,6 +187,4 @@ if __name__ == '__main__':
 
     img_vars = shifted_var('../data/vlog_imgs.json',
                            '../data/handobj_bboxes.json')
-    for img_name in img_vars.keys():
-        print('{0} have variance: left: {1}, right: {2}'.format(
-            img_name, img_vars[img_name][0], img_vars[img_name][1]))
+    json.dump(img_vars, open('../data/var_res.json', 'w'))
