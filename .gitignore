@@ -11,6 +11,7 @@ handobj_viz/*
 res/*
 *.tar.xz
 var_res.txt
+*.pyc
 
 frame_cache
 /hmr/models.tar.gz
