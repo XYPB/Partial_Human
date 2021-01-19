@@ -288,7 +288,6 @@ if __name__ == '__main__':
                 im_file = os.path.join(args.image_dir, imglist[num_images])
                 im_in = cv2.imread(im_file)
             # bgr
-            print(im_in)
             ims = wrist_acc.img_shift_padding(im_in, args.shift)
             for i in range(len(args.shift)):
                 im = ims[i]
