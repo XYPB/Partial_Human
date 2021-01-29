@@ -185,6 +185,6 @@ if __name__ == '__main__':
     #                        '../data/handobj_bboxes.json')
     # print('left accuracy: {0}, right accuracy: {1}'.format(l_acc, r_acc))
 
-    img_vars = shifted_var('../data/vlog_imgs.json',
+    img_vars = shifted_var('../data/ins_imgs.json',
                            '../data/handobj_bboxes.json')
-    json.dump(img_vars, open('../data/var_res.json', 'w'))
+    json.dump(img_vars, open('../data/ins_var_res.json', 'w'))
